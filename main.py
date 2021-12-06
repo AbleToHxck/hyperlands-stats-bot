@@ -4,11 +4,11 @@ import requests
 import json
 
 
-nextcord = discord
+discord = nextcord
 
 bot = commands.Bot(command_prefix='.')
 
-TOKEN = "Insert your bot token here."
+TOKEN = 'OTAwMzM3MTkyOTM1NzU1ODE2.YW_2Wg.l0lAFWmRjuLpwQV2MDL0sf906C4'
 
 @bot.event
 async def on_ready():
