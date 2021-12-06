@@ -1,5 +1,8 @@
 import nextcord
 from nextcord.ext import commands
+import requests
+import json
+
 
 nextcord = discord
 
