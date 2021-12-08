@@ -1,82 +1,137 @@
-import nextcord
-from nextcord.ext import commands
+import discord
+from discord.ext import commands
 import requests
-import json
 
+pogbot = commands.Bot(command_prefix='-')
 
-discord = nextcord
+TOKEN = "TOKEN"
 
-bot = commands.Bot(command_prefix='.')
-
-TOKEN = 'OTAwMzM3MTkyOTM1NzU1ODE2.YW_2Wg.l0lAFWmRjuLpwQV2MDL0sf906C4'
-
-@bot.event
+@pogbot.event
 async def on_ready():
-  print(f'Alive! Logged in as: {bot.user}')
-  
-@bot.command() #hyper stats 
-async def stats (ctx, *, message):
-	await ctx.send(f"Getting the stats for {message}.")
-	stats = requests.get('https://api.hyperlandsmc.net/stats/{}'.format(message))
+    print(f'Alive! Logged in as: {pogbot.user}')
+
+@pogbot.command()
+async def stats(ctx, user): 
+	await ctx.send(f"Getting the stats for {user}.")
+	stats = requests.get('https://api.hyperlandsmc.net/stats/{}'.format(user))
 	stats = stats.json()
 	online = stats['status']['online']
-	last_server = stats['status']['lastServer']
-	rank = stats['rankData']['rank']
-	level = stats['stats']['general']['level']
-	levelprogress = stats['stats']['general']['progress']
-	max_level_progress = stats['stats']['general']['maxProgress']
-	skywars_wins = stats['stats']['skywars']['wins']
-	skywars_kills = stats['stats']['skywars']['kills']
-	bedwars_wins = stats['stats']['bedwars']['wins']
-	bedwars_kills = stats['stats']['bedwars']['kills']
-	bedwars_finalkills = stats['stats']['bedwars']['finalKills']
-	bedwars_beds_broken = stats['stats']['bedwars']['bedsBroken']
-	bedwars_current_ws = stats['stats']['bedwars']['currentWinstreak']
-	bedwars_overall_ws = stats['stats']['bedwars']['bestWinstreak']
-	thebridge_wins = stats['stats']['thebridge']['wins']
-	thebridge_goals = stats['stats']['thebridge']['goals']
-	thebridge_current = stats['stats']['thebridge']['currentWinstreak']
-	thebridge_best = stats['stats']['thebridge']['bestWinstreak']
-	duels_wins = stats['stats']['duels']['buildUhcWins']
-	duels_potwins = stats['stats']['duels']['potWins']
-	duels_ironwins = stats['stats']['duels']['ironWins']
-	duels_archerwins = stats['stats']['duels']['archerWins']
-	duels_sumowis = stats['stats']['duels']['sumoWins']
-	duels_ws = stats['stats']['duels']['currentWinstreak']
-	duel_best_ws = stats['stats']['duels']['bestWinstreak']
-	duel_elo = stats['stats']['duels']['elo']
-	UHC_wins = stats['stats']['uhcmeetup']['wins']
-	UHC_kills = stats['stats']['uhcmeetup']['kills']
+	if online is True:
+		last_server = stats['status']['lastServer']
+		rank = stats['rankData']['rank']
+		level = stats['stats']['general']['level']
+		levelprogress = stats['stats']['general']['progress']
+		max_level_progress = stats['stats']['general']['maxProgress']
+		skywars_wins = stats['stats']['skywars']['wins']
+		skywars_kills = stats['stats']['skywars']['kills']
+		bedwars_wins = stats['stats']['bedwars']['wins']
+		bedwars_kills = stats['stats']['bedwars']['kills']
+		bedwars_finalkills = stats['stats']['bedwars']['finalKills']
+		bedwars_beds_broken = stats['stats']['bedwars']['bedsBroken']
+		bedwars_current_ws = stats['stats']['bedwars']['currentWinstreak']
+		bedwars_overall_ws = stats['stats']['bedwars']['bestWinstreak']
+		thebridge_wins = stats['stats']['thebridge']['wins']
+		thebridge_goals = stats['stats']['thebridge']['goals']
+		thebridge_current = stats['stats']['thebridge']['currentWinstreak']
+		thebridge_best = stats['stats']['thebridge']['bestWinstreak']
+		duels_wins = stats['stats']['duels']['buildUhcWins']
+		duels_potwins = stats['stats']['duels']['potWins']
+		duels_ironwins = stats['stats']['duels']['ironWins']
+		duels_archerwins = stats['stats']['duels']['archerWins']
+		duels_sumowis = stats['stats']['duels']['sumoWins']
+		duels_ws = stats['stats']['duels']['currentWinstreak']
+		duel_best_ws = stats['stats']['duels']['bestWinstreak']
+		duel_elo = stats['stats']['duels']['elo']
+		UHC_wins = stats['stats']['uhcmeetup']['wins']
+		UHC_kills = stats['stats']['uhcmeetup']['kills']
 
-	embed=discord.Embed(title=f'Requested by {ctx.author.name}', color=discord.Color.blue())
-	embed.set_author(name=f"{message}'s Hyperlands Stats",)
-	embed.add_field(name='Rank', value=rank, inline=False)
-	embed.add_field(name='Level', value=f'{level}, Progress {levelprogress}/{max_level_progress}', inline=False)
-	embed.add_field(name='Skywars Wins', value=skywars_wins, inline=True)
-	embed.add_field(name='Skywars Kills', value=skywars_kills, inline=True)
-	embed.add_field(name='Bedwars Wins', value=bedwars_wins, inline=True)
-	embed.add_field(name='Bedwars Kills', value=bedwars_kills, inline=True)
-	embed.add_field(name='Bedwars Final Kills', value=bedwars_finalkills, inline=True)
-	embed.add_field(name='Bedwars Beds Broken', value=bedwars_beds_broken, inline=True)
-	embed.add_field(name='Bedwars Current Winstreak', value=bedwars_current_ws, inline=True)
-	embed.add_field(name='Bedwars Overall Winstreak', value=bedwars_overall_ws, inline=True)
-	embed.add_field(name='The Bridge Wins', value=thebridge_wins, inline=True)
-	embed.add_field(name='The Bridge Goals', value=thebridge_goals, inline=True)
-	embed.add_field(name='The Bridge Current Winstreak', value=thebridge_current, inline=True)
-	embed.add_field(name='The Bridge Best Winstreak', value=thebridge_best, inline=True)
-	embed.add_field(name='Duels Elo', value=duel_elo, inline=True)
-	embed.add_field(name='BuildUHC Wins', value=duels_wins, inline=True)
-	embed.add_field(name='PotPvP Wins', value=duels_potwins, inline=True)
-	embed.add_field(name='Iron Wins', value=duels_ironwins, inline=True)
-	embed.add_field(name='Archer Wins', value=duels_archerwins, inline=True)
-	embed.add_field(name='Duels Current Winstreak', value=duels_ws)
-	embed.add_field(name='Duels Best Winstreak', value=duel_best_ws, inline=True)
-	embed.add_field(name='UHC Wins', value=UHC_wins, inline=True)
-	embed.add_field(name='UHC Kills', value=UHC_kills,)
-	embed.set_footer(text=f'{online}')
-	await ctx.send(embed=embed)
+		embed=discord.Embed(title=f"AbleToHxck's HyperLands stats", color=discord.Color.blue())
+		embed.set_author(name=f"Requested by {ctx.message.author}", icon_url=ctx.author.avatar_url)
+		embed.set_thumbnail(url="https://api.hyperlandsmc.net/head/{}".format (user))
+		embed.add_field(name='Rank', value=rank, inline=False)
+		embed.add_field(name='Level', value=f'{level}, Progress {levelprogress}/{max_level_progress}', inline=False)
+		embed.add_field(name='Skywars Wins', value=skywars_wins, inline=True)
+		embed.add_field(name='Skywars Kills', value=skywars_kills, inline=True)
+		embed.add_field(name='Bedwars Wins', value=bedwars_wins, inline=True)
+		embed.add_field(name='Bedwars Kills', value=bedwars_kills, inline=True)
+		embed.add_field(name='Bedwars Final Kills', value=bedwars_finalkills, inline=True)
+		embed.add_field(name='Bedwars Beds Broken', value=bedwars_beds_broken, inline=True)
+		embed.add_field(name='Bedwars Current Winstreak', value=bedwars_current_ws, inline=True)
+		embed.add_field(name='Bedwars Overall Winstreak', value=bedwars_overall_ws, inline=True)
+		embed.add_field(name='The Bridge Wins', value=thebridge_wins, inline=True)
+		embed.add_field(name='The Bridge Goals', value=thebridge_goals, inline=True)
+		embed.add_field(name='The Bridge Current Winstreak', value=thebridge_current, inline=True)
+		embed.add_field(name='The Bridge Best Winstreak', value=thebridge_best, inline=True)
+		embed.add_field(name='Duels Elo', value=duel_elo, inline=True)
+		embed.add_field(name='BuildUHC Wins', value=duels_wins, inline=True)
+		embed.add_field(name='PotPvP Wins', value=duels_potwins, inline=True)
+		embed.add_field(name='Iron Wins', value=duels_ironwins, inline=True)
+		embed.add_field(name='Archer Wins', value=duels_archerwins, inline=True)
+		embed.add_field(name='Duels Current Winstreak', value=duels_ws)
+		embed.add_field(name='Duels Best Winstreak', value=duel_best_ws, inline=True)
+		embed.add_field(name='UHC Wins', value=UHC_wins, inline=True)
+		embed.add_field(name='UHC Kills', value=UHC_kills,)
+		embed.set_footer(text=f'Online in {last_server}', icon_url='https://as2.ftcdn.net/jpg/04/27/96/91/220_F_427969127_NAdMpfCaKZ58RkeSCzNUIbz1PFVv0x9E.jpg')
+		await ctx.send(embed=embed)
+	else:
+		last_server = stats['status']['lastServer']
+		rank = stats['rankData']['rank']
+		level = stats['stats']['general']['level']
+		levelprogress = stats['stats']['general']['progress']
+		max_level_progress = stats['stats']['general']['maxProgress']
+		skywars_wins = stats['stats']['skywars']['wins']
+		skywars_kills = stats['stats']['skywars']['kills']
+		bedwars_wins = stats['stats']['bedwars']['wins']
+		bedwars_kills = stats['stats']['bedwars']['kills']
+		bedwars_finalkills = stats['stats']['bedwars']['finalKills']
+		bedwars_beds_broken = stats['stats']['bedwars']['bedsBroken']
+		bedwars_current_ws = stats['stats']['bedwars']['currentWinstreak']
+		bedwars_overall_ws = stats['stats']['bedwars']['bestWinstreak']
+		thebridge_wins = stats['stats']['thebridge']['wins']
+		thebridge_goals = stats['stats']['thebridge']['goals']
+		thebridge_current = stats['stats']['thebridge']['currentWinstreak']
+		thebridge_best = stats['stats']['thebridge']['bestWinstreak']
+		duels_wins = stats['stats']['duels']['buildUhcWins']
+		duels_potwins = stats['stats']['duels']['potWins']
+		duels_ironwins = stats['stats']['duels']['ironWins']
+		duels_archerwins = stats['stats']['duels']['archerWins']
+		duels_sumowis = stats['stats']['duels']['sumoWins']
+		duels_ws = stats['stats']['duels']['currentWinstreak']
+		duel_best_ws = stats['stats']['duels']['bestWinstreak']
+		duel_elo = stats['stats']['duels']['elo']
+		UHC_wins = stats['stats']['uhcmeetup']['wins']
+		UHC_kills = stats['stats']['uhcmeetup']['kills']
 
-@bot.command() #hyper stats 
+		embed=discord.Embed(title=f"AbleToHxck's HyperLands stats", color=discord.Color.blue())
+		embed.set_author(name=f"Requested by {ctx.message.author}", icon_url=ctx.author.avatar_url)
+		embed.set_thumbnail(url="https://api.hyperlandsmc.net/head/{}".format (user))
+		embed.add_field(name='Rank', value=rank, inline=False)
+		embed.add_field(name='Level', value=f'{level}, Progress {levelprogress}/{max_level_progress}', inline=False)
+		embed.add_field(name='Skywars Wins', value=skywars_wins, inline=True)
+		embed.add_field(name='Skywars Kills', value=skywars_kills, inline=True)
+		embed.add_field(name='Bedwars Wins', value=bedwars_wins, inline=True)
+		embed.add_field(name='Bedwars Kills', value=bedwars_kills, inline=True)
+		embed.add_field(name='Bedwars Final Kills', value=bedwars_finalkills, inline=True)
+		embed.add_field(name='Bedwars Beds Broken', value=bedwars_beds_broken, inline=True)
+		embed.add_field(name='Bedwars Current Winstreak', value=bedwars_current_ws, inline=True)
+		embed.add_field(name='Bedwars Overall Winstreak', value=bedwars_overall_ws, inline=True)
+		embed.add_field(name='The Bridge Wins', value=thebridge_wins, inline=True)
+		embed.add_field(name='The Bridge Goals', value=thebridge_goals, inline=True)
+		embed.add_field(name='The Bridge Current Winstreak', value=thebridge_current, inline=True)
+		embed.add_field(name='The Bridge Best Winstreak', value=thebridge_best, inline=True)
+		embed.add_field(name='Duels Elo', value=duel_elo, inline=True)
+		embed.add_field(name='BuildUHC Wins', value=duels_wins, inline=True)
+		embed.add_field(name='PotPvP Wins', value=duels_potwins, inline=True)
+		embed.add_field(name='Iron Wins', value=duels_ironwins, inline=True)
+		embed.add_field(name='Archer Wins', value=duels_archerwins, inline=True)
+		embed.add_field(name='Duels Current Winstreak', value=duels_ws)
+		embed.add_field(name='Duels Best Winstreak', value=duel_best_ws, inline=True)
+		embed.add_field(name='UHC Wins', value=UHC_wins, inline=True)
+		embed.add_field(name='UHC Kills', value=UHC_kills,)
+		embed.set_footer(text=f'Offline • Last seen in {last_server}', icon_url="https://images-ext-2.discordapp.net/external/joqnTJ2o-HMFWdi31uYfsm_Db8skV2GnFz_i_y_hLA4/https/cdn.nethergames.org/img/red.png")
+		await ctx.send(embed=embed)
+
+@pogbot.command() #hyper stats 
 async def compare(ctx, player1, *, p2):
 	await ctx.send(f"Comparing {player1} and {p2}.", delete_after=2)
 	stats = requests.get(f'https://api.hyperlandsmc.net/stats/{player1}')
@@ -166,10 +221,11 @@ async def compare(ctx, player1, *, p2):
 	embed.add_field(name=f"UHC kills:", value=f"{player1}: {UHC_kills}\n{p2}: {UHC_kills2}")
 	embed.set_image(url="https://discordapp.com/assets/e4923594e694a21542a489471ecffa50.svg")
 	await ctx.send(embed=embed)
-	#await ctx.send(f"{player1}'s skin: https://api.hyperlandsmc.net/skin/{player1} \n{p2}'s skin: https://api.hyperlandsmc.net/skin/{p2}")
 
-@bot.command()
-async def skin(ctx, *, player):
-	await ctx.send(f"https://api.hyperlandsmc.net/skin/{player}")
-  
-bot.run(TOKEN)
+@pogbot.command()
+async def skin(ctx, player):
+    embed = discord.Embed(title=f"{player}'s skin", color=discord.Color.blue(), url=f'https://api.hyperlandsmc.net/skin/{player}')
+    embed.set_image(url = f"https://api.hyperlandsmc.net/skin/{player}")
+    await ctx.send(embed=embed)
+
+pogbot.run(TOKEN)
